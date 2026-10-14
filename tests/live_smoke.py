@@ -1,9 +1,10 @@
 """Read-only public deployment smoke checks; creates no agency/property/customer records."""
-import json
+import json,os
 from pathlib import Path
 from playwright.sync_api import sync_playwright,expect
 BASE='https://afyasoft.co.tz'
 ROOT=Path(__file__).resolve().parent.parent
+PREFIX=os.environ.get('ESTATE_QA_ARTIFACT_PREFIX','live')
 
 def main():
  results=[];errors=[]
@@ -15,7 +16,7 @@ def main():
   expect(page.get_by_role('heading',name='Find Your Next Property. Manage Your Real Estate Smarter.')).to_be_visible()
   page.locator('img').evaluate_all("imgs=>imgs.forEach(img=>img.loading='eager')")
   page.wait_for_function('Array.from(document.images).every(img=>img.complete&&img.naturalWidth>0)')
-  page.screenshot(path=str(ROOT/'artifacts/live-home-desktop.png'))
+  page.screenshot(path=str(ROOT/f'artifacts/{PREFIX}-home-desktop.png'))
   results.append('HTTPS homepage and locally served photographs load')
   for route in ['/properties/','/properties/demo-property-01/','/agents/','/agencies/','/pricing/','/about/','/contact/','/demo/','/accounts/login/','/accounts/register/','/accounts/password_reset/']:
    response=page.goto(BASE+route);assert response.status==200,(route,response.status)
@@ -36,10 +37,10 @@ def main():
   for route in ['/','/properties/','/properties/demo-property-01/','/accounts/register/']:
    m.goto(BASE+route);sizes=m.evaluate('({viewport:innerWidth,document:document.documentElement.scrollWidth})');assert sizes['document']<=sizes['viewport'],(route,sizes)
   results.append('Live mobile homepage, directory, detail and registration have no horizontal overflow')
-  m.goto(BASE+'/');m.screenshot(path=str(ROOT/'artifacts/live-home-mobile.png'));m.get_by_role('button',name='Menu',exact=False).click();expect(m.locator('#public-nav')).to_be_visible();m.get_by_role('link',name='Properties',exact=True).click();expect(m.get_by_role('heading',name='Find your place in Tanzania.')).to_be_visible()
+  m.goto(BASE+'/');m.screenshot(path=str(ROOT/f'artifacts/{PREFIX}-home-mobile.png'));m.get_by_role('button',name='Menu',exact=False).click();expect(m.locator('#public-nav')).to_be_visible();m.get_by_role('link',name='Properties',exact=True).click();expect(m.get_by_role('heading',name='Find your place in Tanzania.')).to_be_visible()
   results.append('Live mobile navigation opens and follows links')
   assert not errors,errors
   browser.close()
- (ROOT/'artifacts/live-browser-results.json').write_text(json.dumps({'url':BASE,'checks':results,'javascript_errors':errors},indent=2)+'\n')
+ (ROOT/f'artifacts/{PREFIX}-browser-results.json').write_text(json.dumps({'url':BASE,'checks':results,'javascript_errors':errors},indent=2)+'\n')
  print(json.dumps(results,indent=2))
 if __name__=='__main__':main()

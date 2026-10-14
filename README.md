@@ -146,3 +146,6 @@ The local generated sunset hero is [static/images/hero-v2.png](static/images/her
 
 
 Editable agency demos: the production administrator can copy the original sample portfolio and linked operations/CRM into a registered agency using `python manage.py copy_demo_to_agency --agency-id <id> --expected-name "Exact agency name"`. This preserves existing records and logins, creates private draft sample listings, remaps every related record into that agency, and records an import manifest so repeated runs preserve edits without duplication. See [the deployment guide](deploy/README.md#editable-sample-data-for-a-registered-agency).
+
+
+Mobile layouts: the responsive release was verified at 320–1440px, including public pages, management, CRM, records and forms. See [responsive QA](artifacts/responsive-verification.md) and [live results](artifacts/responsive-live-browser-results.json). The optional `tests/responsive_smoke.py` uses local sample credentials by default and accepts `ESTATE_QA_URL`, `ESTATE_QA_USERNAME` and `ESTATE_QA_PASSWORD` environment variables for a dedicated test environment. Never put production passwords in test source or Git.

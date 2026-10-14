@@ -3,8 +3,8 @@
 - Public URL: **https://afyasoft.co.tz/**
 - Server: `167.86.82.106` (Ubuntu 24.04, Python 3.12).
 - Main-domain replacement explicitly approved by the owner; original AfyaSoft retained for rollback.
-- Runtime source commit: `c4d37577285096e29a15fbeab8840b325bda61cc` (editable agency sample import update).
-- Active release: `/srv/estate-os/releases/c4d37577285096e29a15fbeab8840b325bda61cc`.
+- Runtime source commit: `28c6786ebaadd8d03edf39ca0852c2981d02e211` (responsive layout update).
+- Active release: `/srv/estate-os/releases/28c6786ebaadd8d03edf39ca0852c2981d02e211`.
 - Application: `estate-os.service`, Gunicorn on `127.0.0.1:8010`, dedicated unprivileged `estateos` system user.
 - Database: dedicated PostgreSQL 16 `estateos` database/role; local Unix socket peer authentication. The app role is neither superuser nor allowed to create databases.
 - Persistent uploads: `/srv/estate-os/shared/media`; no public media alias.
@@ -62,3 +62,12 @@ Copied properties start as private drafts and retain a sample-content flag if th
 Verification: 29 automated tests passed locally and on the server's separate PostgreSQL test database. Import tests cover related-record isolation, preservation of existing records, successful editing/publication, disabled sample logins, repeat imports and refusal of incorrect targets/incomplete source data. After the production import, every manifest count was checked and both populated dashboards rendered successfully using the existing administrator's permissions, without changing the administrator's login session.
 
 Pre-update backup: `/var/backups/estate-os/20261014T111458Z/`. The new runtime schema additions are `core.0001_initial` and `properties.0002_property_is_sample`; the update did not change nginx or the retained AfyaSoft application.
+
+
+## Responsive release — 14 October 2026
+
+Deployed release `28c6786ebaadd8d03edf39ca0852c2981d02e211`. Phone layouts now use a naturally flowing hero/search form, readable text and touch controls, labeled record cards, scrollable report tables, a swipeable CRM pipeline, and an accessible drawer with backdrop/close/Escape/focus handling. CSS and JavaScript asset URLs include the release identifier to avoid reusing old cached styles.
+
+Local Chrome verification checked 102 page/viewport combinations at 320, 375, 430, 768, 1024 and 1440 pixels. All 29 tests passed locally and again on the server's separate PostgreSQL test database. Eight live public Chrome checks passed after deployment, including four phone layouts and mobile navigation, without JavaScript page errors. The new versioned stylesheet returned HTTP 200. Estate OS, nginx and the preserved AfyaSoft service were active.
+
+Pre-update backup: `/var/backups/estate-os/20261014T114032Z/`. No migrations were needed and no agency records or account passwords were changed by the responsive release. Current screenshots and browser results use the `responsive-live-` prefix under `artifacts/`. Physical phone hardware has not been tested.

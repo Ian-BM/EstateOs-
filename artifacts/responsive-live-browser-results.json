@@ -1,0 +1,14 @@
+{
+  "url": "https://afyasoft.co.tz",
+  "checks": [
+    "HTTPS homepage and locally served photographs load",
+    "All eleven public/account routes return HTTP 200",
+    "Live property filters return database listings",
+    "Private workspace requires authentication",
+    "Public demo password cannot authenticate; HTTPS login CSRF validation works",
+    "CSRF cookie is Secure and HttpOnly",
+    "Live mobile homepage, directory, detail and registration have no horizontal overflow",
+    "Live mobile navigation opens and follows links"
+  ],
+  "javascript_errors": []
+}
