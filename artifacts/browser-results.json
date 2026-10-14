@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "Desktop homepage has no page overflow",
+    "Public enquiry submitted successfully",
+    "Enquiry visible to agent; lead stage persisted",
+    "Agent scheduled a viewing",
+    "Desktop CRM pipeline has no page overflow",
+    "Desktop management has no page overflow",
+    "Manager created, published and opened a new listing",
+    "Offline draft stored, reloaded and manually synchronized",
+    "Mobile homepage has no page overflow",
+    "Mobile directory has no page overflow",
+    "Mobile property detail has no page overflow",
+    "Mobile login has no page overflow",
+    "Mobile management has no page overflow",
+    "Mobile pipeline has no page overflow",
+    "Mobile property table has no page overflow",
+    "Mobile inspection form has no page overflow",
+    "Mobile public and workspace navigation work"
+  ],
+  "javascript_errors": []
+}

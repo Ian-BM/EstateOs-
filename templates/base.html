@@ -1,0 +1,5 @@
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml"><meta name="theme-color" content="#102136"><meta name="description" content="Estate OS — find your next property and manage real estate smarter in Tanzania."><title>{% block title %}ESTATE OS · Find your place{% endblock %}</title><link rel="stylesheet" href="{% static 'css/base.css' %}"><link rel="stylesheet" href="{% static 'css/public.css' %}"><link rel="stylesheet" href="{% static 'css/dashboard.css' %}"><link rel="stylesheet" href="{% static 'css/responsive.css' %}"><script src="{% static 'js/main.js' %}" defer></script>{% block scripts %}{% endblock %}</head>
+<body>{% block navigation %}{% include 'includes/nav.html' %}{% endblock %}
+{% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}{% block footer %}{% include 'includes/footer.html' %}{% endblock %}</body></html>

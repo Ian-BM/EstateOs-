@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+media/
+.env
+staticfiles/
+.local-secret
+
+# Local state, credentials and platform metadata
+.env.*
+!.env.example
+*.sqlite3
+*.sqlite3-*
+.DS_Store
+*.pem
+*.key
+.aws/
+.codex/
