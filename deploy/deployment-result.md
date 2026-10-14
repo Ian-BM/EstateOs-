@@ -3,8 +3,8 @@
 - Public URL: **https://afyasoft.co.tz/**
 - Server: `167.86.82.106` (Ubuntu 24.04, Python 3.12).
 - Main-domain replacement explicitly approved by the owner; original AfyaSoft retained for rollback.
-- Runtime source commit: `6627795b03514512321b6c474f656982cb363ad5`.
-- Active release: `/srv/estate-os/releases/6627795b03514512321b6c474f656982cb363ad5-ready`.
+- Runtime source commit: `c4d37577285096e29a15fbeab8840b325bda61cc` (editable agency sample import update).
+- Active release: `/srv/estate-os/releases/c4d37577285096e29a15fbeab8840b325bda61cc`.
 - Application: `estate-os.service`, Gunicorn on `127.0.0.1:8010`, dedicated unprivileged `estateos` system user.
 - Database: dedicated PostgreSQL 16 `estateos` database/role; local Unix socket peer authentication. The app role is neither superuser nor allowed to create databases.
 - Persistent uploads: `/srv/estate-os/shared/media`; no public media alias.
@@ -49,3 +49,16 @@ The first Estate OS backup completed at `/var/backups/estate-os/20261014T103808Z
 Use **Register your agency** to create a real business account. No default production administrator or working demo password is exposed. A platform superuser can be provisioned separately via the server CLI with a unique private password.
 
 SMTP delivery remains unconfigured; password-reset messages currently go to the service log. The limited offline draft/manual-sync prototype and other functional boundaries in the README remain unchanged. Physical devices and non-Chrome browsers have not been tested in this deployment.
+
+
+## Editable agency sample import — 14 October 2026
+
+At the owner's explicit request, the original sample dataset was copied into the existing **DEMO REAL ESTATE** agency, preserving its existing administrator account and any existing records. An import manifest in `core.DemoDataImport` makes this a one-time, transactional copy; retries preserve user edits and do not duplicate records.
+
+Imported: 25 properties, 44 units, 10 landlords, 15 tenants, 13 leases, 9 inspections, 9 maintenance requests, 9 manual financial samples, 18 leads, 10 viewings, 18 tasks and 18 contacts, plus 10 disabled sample staff profiles. Every relationship points to the new copies within that agency. Incoming public enquiries, actual customer records, documents and uploaded media were excluded.
+
+Copied properties start as private drafts and retain a sample-content flag if the agency later publishes them. The workspace banner identifies the editable demonstration records. The original public sample listings remain available. No passwords or existing agency settings were changed.
+
+Verification: 29 automated tests passed locally and on the server's separate PostgreSQL test database. Import tests cover related-record isolation, preservation of existing records, successful editing/publication, disabled sample logins, repeat imports and refusal of incorrect targets/incomplete source data. After the production import, every manifest count was checked and both populated dashboards rendered successfully using the existing administrator's permissions, without changing the administrator's login session.
+
+Pre-update backup: `/var/backups/estate-os/20261014T111458Z/`. The new runtime schema additions are `core.0001_initial` and `properties.0002_property_is_sample`; the update did not change nginx or the retained AfyaSoft application.

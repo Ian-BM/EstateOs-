@@ -143,3 +143,6 @@ Optional browser QA uses **Playwright only as a development test tool**, not an 
 Latest verification: **23 Django tests and 17 Chrome browser checks passed**, with no JavaScript page errors. System checks and migrations passed. Populated record detail/edit pages also passed a read-only HTTP smoke check. See [the verification report](artifacts/verification.md), [browser results](artifacts/browser-results.json), [desktop preview](artifacts/home-preview.png) and [mobile preview](artifacts/home-mobile-preview.png). The temporary server was stopped after QA.
 
 The local generated sunset hero is [static/images/hero-v2.png](static/images/hero-v2.png). [Image credits](static/images/CREDITS.md) include its final prompt and built-in generation mode, plus the source IDs and license link for the other local photographs.
+
+
+Editable agency demos: the production administrator can copy the original sample portfolio and linked operations/CRM into a registered agency using `python manage.py copy_demo_to_agency --agency-id <id> --expected-name "Exact agency name"`. This preserves existing records and logins, creates private draft sample listings, remaps every related record into that agency, and records an import manifest so repeated runs preserve edits without duplication. See [the deployment guide](deploy/README.md#editable-sample-data-for-a-registered-agency).
