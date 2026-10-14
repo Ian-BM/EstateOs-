@@ -22,6 +22,6 @@ Client.request=https_request
 call_command('test',keepdb=True,interactive=False)
 """
 subprocess.run(['runuser','-u','estateos','--',str(base/'venv/bin/python'),'-c',bootstrap],cwd=release,env=env,check=True)
-# Assert that the production DB remains populated only with disabled sample users.
-code="from django.contrib.auth.models import User; from properties.models import Property; assert Property.objects.count()==25; assert not User.objects.filter(is_active=True).exists(); assert all(not u.has_usable_password() for u in User.objects.all()); print('Production showcase: 25 properties; all sample logins disabled.')"
+# Verify the original showcase without assuming real agencies have no records/users.
+code="from django.contrib.auth.models import User; from properties.models import Property; users=User.objects.filter(username__in=['demo_admin','demo_manager','demo_agent']+[f'demo_agent{i}' for i in range(2,9)]); assert Property.objects.filter(agency__is_demo=True,slug__startswith='demo-property-').count()==25; assert users.count()==10; assert not users.filter(is_active=True).exists(); assert all(not u.has_usable_password() for u in users); print('Original showcase: 25 properties; original sample logins disabled; real agencies preserved.')"
 subprocess.run(['runuser','-u','estateos','--',str(base/'venv/bin/python'),str(release/'manage.py'),'shell','-c',code],cwd=release,env=env,check=True)

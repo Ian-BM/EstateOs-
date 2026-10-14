@@ -39,3 +39,13 @@ The actual nginx backup path and deployed commit are recorded in `deployment-res
 An Estate OS application rollback changes `current` to a previous release and restarts `estate-os`. Database migrations may require a matching database restore; never assume a source rollback reverses schema changes.
 
 SMTP credentials are not configured by this deployment. Password-reset emails use the console backend until SMTP is supplied. The application's existing offline draft feature remains a limited manual-sync prototype.
+
+## Editable sample data for a registered agency
+
+An administrator can copy the original synthetic dataset into a real agency workspace:
+
+```sh
+python manage.py copy_demo_to_agency --agency-id 4 --expected-name "DEMO REAL ESTATE"
+```
+
+Run with the application's production environment and system user. The exact name check prevents an accidental import into another agency. The import is transactional and runs once per agency; its `DemoDataImport` manifest preserves the source-to-copy mapping. Re-running preserves existing records and user edits. It adds 25 sample properties, the linked operations/CRM records and disabled sample staff, with every relationship reassigned to the destination agency. Existing real records and the owner's account stay intact. It copies only known synthetic seed records, excluding public enquiries, actual visitors, documents and uploaded media. Copied listings start as private drafts, carry a persistent sample-content label and require the agency's normal publication action. Imported financial records are explicitly illustrative. A workspace banner identifies the imported dataset.

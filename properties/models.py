@@ -21,6 +21,7 @@ class Property(AgencyRecord):
     availability = models.CharField(max_length=15,choices=[('available','Available'),('occupied','Occupied'),('unavailable','Unavailable')],default='available')
     features = models.TextField(blank=True,help_text='One feature per line')
     sample_image = models.CharField(max_length=120,blank=True)
+    is_sample = models.BooleanField(default=False,editable=False)
     class Meta(AgencyRecord.Meta):
         constraints = [models.CheckConstraint(condition=models.Q(price__gte=0),name='property_price_nonnegative')]
     def __str__(self): return self.name
