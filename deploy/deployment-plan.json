@@ -1,0 +1,11 @@
+{
+  "domain": "afyasoft.co.tz",
+  "server": "167.86.82.106",
+  "service": "estate-os",
+  "application_port": "127.0.0.1:8010",
+  "source_commit": "6627795b03514512321b6c474f656982cb363ad5",
+  "previous_site_service": "gunicorn-afyasoft",
+  "database": "estateos",
+  "sample_accounts": "disabled; unusable passwords",
+  "cutover_authorized": true
+}
