@@ -12,9 +12,14 @@ from crm.models import Lead,Viewing,Task,Contact
 from core.services import refresh_occupancy
 class Command(BaseCommand):
     help='Create an idempotent LOCAL demo portfolio. Existing records and passwords are preserved.'
+    def add_arguments(self,parser):
+        parser.add_argument('--showcase-only',action='store_true',help='Create labeled sample content with disabled accounts and unusable passwords. Safe for a public showcase.')
     @transaction.atomic
     def handle(self,*args,**options):
-        if not settings.DEBUG: raise CommandError('Demo seeding is disabled when DEBUG is false.')
+        showcase=options.get('showcase_only',False)
+        if not settings.DEBUG and not showcase: raise CommandError('Demo login accounts are disabled when DEBUG is false. Use --showcase-only for sample content without usable accounts.')
+        if showcase and User.objects.filter(username__in=['demo_admin','demo_manager','demo_agent']+[f'demo_agent{i}' for i in range(2,9)]).filter(is_active=True).exists():
+            raise CommandError('Refusing showcase seeding over existing active demo users. Use a fresh deployment database.')
         now=timezone.now();today=timezone.localdate()
         agencies=[]
         for name,city in [('Coastal Living','Dar es Salaam'),('Kilimanjaro Estates','Arusha'),('Island & City','Zanzibar')]:
@@ -24,7 +29,11 @@ class Command(BaseCommand):
         members=[]
         for username,role,first,last,index in specs:
             user,created=User.objects.get_or_create(username=username,defaults={'first_name':first,'last_name':last,'email':username+'@example.invalid'})
-            if created: user.set_password('EstateDemo2026!');user.save()
+            if created:
+                if showcase:
+                    user.set_unusable_password();user.is_active=False
+                else: user.set_password('EstateDemo2026!')
+                user.save()
             existing=AgencyMembership.objects.filter(user=user).first()
             if existing and (existing.agency_id!=agencies[index].pk or existing.role!=role): raise CommandError(f'Username {username} belongs to a different membership; refusing to overwrite.')
             member,_=AgencyMembership.objects.get_or_create(user=user,defaults={'agency':agencies[index],'role':role,'phone':'+255 700 000 000','specialization':['Coastal & luxury homes','Residential properties','Commercial spaces'][index]})
@@ -71,4 +80,7 @@ class Command(BaseCommand):
                     Viewing.objects.get_or_create(agency=agency,lead=lead,property=prop,defaults={'agent':prop.assigned_agent,'date':now+timedelta(days=i+1),'status':'confirmed' if i%2 else 'requested','notes':'Sample appointment'})
                 Task.objects.get_or_create(agency=agency,lead=lead,title=f'Follow up with {lead.name}',defaults={'assigned_to':prop.assigned_agent,'property':prop,'deadline':now+timedelta(days=i%5+1)})
         self.stdout.write(self.style.SUCCESS('Demo portfolio ready: 3 agencies, 10 staff, 25 properties, 10 landlords, 15 tenants. Re-running preserves edits and does not duplicate seeded records.'))
+        if showcase:
+            self.stdout.write('Public showcase ready. Sample staff accounts are inactive and cannot log in. Register a real agency account to use your own workspace.')
+            return
         self.stdout.write('Local demo users: demo_admin / demo_manager / demo_agent. Initial password: EstateDemo2026! (existing passwords are not reset). No platform superuser is created.')

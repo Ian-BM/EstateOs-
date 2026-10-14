@@ -1,0 +1,8 @@
+[Unit]
+Description=Back up Estate OS database and uploads
+After=postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/estate-os-backup
+UMask=0077
