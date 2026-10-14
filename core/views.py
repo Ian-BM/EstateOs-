@@ -79,7 +79,7 @@ def record_list(request,key):
             writer.writerow([("'"+str(v)) if str(v).startswith(('=','+','-','@','\t','\r')) else v for v in values])
         return response
     page=Paginator(qs,20).get_page(request.GET.get('page'))
-    rows=[{'object':obj,'values':[display(obj,c) for c in columns]} for obj in page]
+    rows=[{'object':obj,'cells':[{'label':c.replace('_',' ').title(),'value':display(obj,c)} for c in columns]} for obj in page]
     params=request.GET.copy();params.pop('page',None);params.pop('export',None)
     return render(request,'workspace/list.html',{'title':title,'key':key,'querystring':params.urlencode(),'columns':columns,'rows':rows,'page_obj':page,'section':'crm' if key in CRM_KEYS else 'management','stages':Lead.STAGES if key=='leads' else []})
 

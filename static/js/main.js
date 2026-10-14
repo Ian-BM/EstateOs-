@@ -1,8 +1,46 @@
 'use strict';
-for(const [buttonSelector,menuSelector] of [['.menu-toggle','#public-nav'],['.workspace-menu','#workspace-nav']]){
- const button=document.querySelector(buttonSelector),menu=document.querySelector(menuSelector);
- if(button&&menu){button.addEventListener('click',()=>{const open=menu.classList.toggle('open');button.setAttribute('aria-expanded',String(open));});document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.classList.remove('open');button.setAttribute('aria-expanded','false');}});}
+const mobileNavigation = matchMedia('(max-width: 960px)');
+const backdrop = document.querySelector('.nav-backdrop');
+const navigationPairs = [['.menu-toggle','#public-nav'],['.workspace-menu','#workspace-nav']]
+  .map(([button,menu])=>({button:document.querySelector(button),menu:document.querySelector(menu)}))
+  .filter(pair=>pair.button&&pair.menu);
+let activeNavigation = null;
+function closeNavigation(restoreFocus=false){
+  const previous=activeNavigation;
+  for(const pair of navigationPairs){
+    pair.menu.classList.remove('open');pair.button.setAttribute('aria-expanded','false');
+    pair.menu.inert=mobileNavigation.matches;
+  }
+  activeNavigation=null;document.body.classList.remove('nav-open');
+  const main=document.querySelector('.workspace-main');if(main)main.inert=false;
+  if(backdrop)backdrop.hidden=true;
+  if(restoreFocus&&previous)previous.button.focus();
 }
+for(const pair of navigationPairs){
+  pair.menu.inert=mobileNavigation.matches;
+  pair.button.addEventListener('click',()=>{
+    if(activeNavigation===pair){closeNavigation(true);return;}
+    closeNavigation();activeNavigation=pair;pair.menu.inert=false;
+    pair.menu.classList.add('open');pair.button.setAttribute('aria-expanded','true');
+    document.body.classList.add('nav-open');if(backdrop)backdrop.hidden=false;
+    if(pair.menu.id==='workspace-nav')document.querySelector('.workspace-main').inert=true;
+    pair.menu.querySelector('a,button')?.focus();
+  });
+  pair.menu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>closeNavigation()));
+  pair.menu.querySelectorAll('[data-close-nav]').forEach(button=>button.addEventListener('click',()=>closeNavigation(true)));
+}
+backdrop?.addEventListener('click',()=>closeNavigation(true));
+mobileNavigation.addEventListener('change',()=>closeNavigation());
+document.addEventListener('keydown',event=>{
+  if(!activeNavigation)return;
+  if(event.key==='Escape'){event.preventDefault();closeNavigation(true);return;}
+  if(event.key==='Tab'){
+    const focusable=[...(activeNavigation.menu.id==='public-nav'?[activeNavigation.button]:[]),...activeNavigation.menu.querySelectorAll('a,button,input,select,textarea,[tabindex="0"]')].filter(el=>el.offsetParent!==null&&!el.disabled);
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  }
+});
 for(const link of document.querySelectorAll('.sidebar nav a')){if(link.pathname===location.pathname)link.classList.add('active');}
 for(const button of document.querySelectorAll('[data-favorite]')){
  const key='estate-favorite-'+button.dataset.favorite;

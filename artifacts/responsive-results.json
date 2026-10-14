@@ -1,0 +1,26 @@
+{
+  "url": "http://127.0.0.1:8011",
+  "widths": [
+    320,
+    375,
+    430,
+    768,
+    1024,
+    1440
+  ],
+  "checks": [
+    "Public pages, forms and hero fit at 320px",
+    "Public pages, forms and hero fit at 375px",
+    "Public pages, forms and hero fit at 430px",
+    "Public pages, forms and hero fit at 768px",
+    "Public pages, forms and hero fit at 1024px",
+    "Public pages, forms and hero fit at 1440px",
+    "Management, CRM, record cards, reports and forms fit at 320px",
+    "Management, CRM, record cards, reports and forms fit at 375px",
+    "Management, CRM, record cards, reports and forms fit at 430px",
+    "Management, CRM, record cards, reports and forms fit at 768px",
+    "Management, CRM, record cards, reports and forms fit at 1024px",
+    "Management, CRM, record cards, reports and forms fit at 1440px"
+  ],
+  "javascript_errors": []
+}

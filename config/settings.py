@@ -62,3 +62,5 @@ if os.environ.get('DJANGO_TRUST_PROXY','0') == '1':
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
+
+STATIC_ASSET_VERSION = os.environ.get('DJANGO_ASSET_VERSION', BASE_DIR.name if BASE_DIR.parent.name == 'releases' else 'local-mobile-v1')
